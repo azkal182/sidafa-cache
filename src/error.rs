@@ -14,6 +14,9 @@ pub enum AppError {
     #[error("YouTube API error: {0}")]
     YouTubeApi(String),
 
+    #[error("WordPress API error: {0}")]
+    WordPressApi(String),
+
     #[error("Redis error: {0}")]
     Redis(#[from] redis::RedisError),
 
@@ -29,6 +32,7 @@ impl IntoResponse for AppError {
         let (status, message) = match &self {
             AppError::Validation(msg) => (StatusCode::BAD_REQUEST, msg.clone()),
             AppError::YouTubeApi(msg) => (StatusCode::BAD_GATEWAY, msg.clone()),
+            AppError::WordPressApi(msg) => (StatusCode::BAD_GATEWAY, msg.clone()),
             AppError::Redis(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()),
             AppError::Request(e) => (StatusCode::BAD_GATEWAY, e.to_string()),
             AppError::Internal(e) => (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()),

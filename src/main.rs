@@ -2,6 +2,7 @@ mod cache;
 mod config;
 mod error;
 mod routes;
+mod wordpress;
 mod youtube;
 
 use std::{net::SocketAddr, sync::Arc, time::Duration};
@@ -19,6 +20,7 @@ use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Env
 use cache::RedisCache;
 use config::Config;
 use routes::create_router;
+use wordpress::WordPressService;
 use youtube::YouTubeService;
 
 #[tokio::main]
@@ -54,7 +56,10 @@ async fn main() -> anyhow::Result<()> {
         .build()?;
 
     // Initialize YouTube service
-    let youtube_service = YouTubeService::new(http_client, cache, config.clone());
+    let youtube_service = YouTubeService::new(http_client.clone(), cache.clone(), config.clone());
+
+    // Initialize WordPress service
+    let wordpress_service = WordPressService::new(http_client, cache);
 
     // Rate limiting configuration: 100 requests per minute per IP
     let governor_conf = Arc::new(
@@ -77,7 +82,7 @@ async fn main() -> anyhow::Result<()> {
     });
 
     // Build router with middleware
-    let app = create_router(youtube_service)
+    let app = create_router(youtube_service, wordpress_service)
         .layer(
             ServiceBuilder::new()
                 .layer(
