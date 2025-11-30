@@ -40,6 +40,7 @@ cargo run
 | `SERVER_HOST` | Server host | `127.0.0.1` |
 | `REDIS_HOST` | Redis server host | `127.0.0.1` |
 | `REDIS_PORT` | Redis server port | `6379` |
+| `REDIS_PASSWORD` | Redis password (optional) | `your_password` |
 | `YOUTUBE_API_KEY` | YouTube Data API key | `AIza...` |
 | `CHANNEL_ID` | YouTube channel ID | `UC...` |
 | `RUST_LOG` | Log level | `info` |
@@ -77,6 +78,7 @@ PORT=3000
 SERVER_HOST=127.0.0.1
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
+REDIS_PASSWORD=your_redis_password
 YOUTUBE_API_KEY=your_youtube_api_key
 CHANNEL_ID=your_channel_id
 RUST_LOG=info
